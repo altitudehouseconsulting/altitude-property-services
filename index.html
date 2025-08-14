@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!--
+      =============================================
+      Property Management & Home Repair Consulting — Image & Text Focused Landing Page
+      ---------------------------------------------
+      • Single‑file HTML (no external deps) with inline CSS + a tiny bit of JS
+      • Clean, modern, mobile‑first layout using CSS Grid & Flexbox
+      • Image‑forward sections (hero, service cards, project gallery, before/after)
+      • Accessible (semantic tags, labels, alt text, focus states)
+      • Branded in cool blues by default — update the CSS variables below to match your brand
+      • Replace placeholders (logo text, images, phone/email, service copy) with your content
+
+      Tips
+      ----
+      1) Save this file as index.html and open it locally or deploy to GitHub Pages/Netlify.
+      2) Swap any placeholder image URLs with your own. A quick helper is https://placehold.co/.
+      3) Search for "TODO:" comments for common edit spots.
+    =============================================
+    -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Altitude House — Property Management & Home Repair Consulting</title>
+    <meta name="description" content="Image‑first landing page for property management and home repair consulting: services, projects, testimonials, and contact." />
+
+    <!-- Brand & Theme Variables -->
+    <style>
+      :root{
+        /* === Brand palette (update to match your logo/brand) === */
+        --brand-900:#0b1f4a; /* deep navy */
+        --brand-700:#1e3a8a; /* indigo */
+        --brand-600:#2148a3; /* royal blue */
+        --brand-500:#2563eb; /* bright blue */
+        --brand-400:#3b82f6; /* light blue */
+        --brand-300:#60a5fa; /* sky */
+        --brand-200:#93c5fd; /* powder */
+        --cyan-500:#0ea5e9;  /* accent */
+        /* === Neutrals === */
+        --ink-900:#0f172a; /* slate-900 */
+        --ink-700:#334155; /* slate-700 */
+        --ink-600:#475569; /* slate-600 */
+        --ink-500:#64748b; /* slate-500 */
+        --ink-300:#cbd5e1; /* slate-300 */
+        --ink-200:#e2e8f0; /* slate-200 */
+        --surface:#ffffff;
+        --bg:#f8fafc;
+        /* === Radii & Shadows === */
+        --radius-xl: 18px;
+        --radius-lg: 14px;
+        --radius-md: 10px;
+        --shadow-lg: 0 20px 40px rgba(2,6,23,0.12);
+        --shadow-md: 0 10px 20px rgba(2,6,23,0.10);
+        --shadow-sm: 0 4px 10px rgba(2,6,23,0.08);
+        /* === Layout === */
+        --container: 1180px;
+      }
+
+      /* Base & Resets */
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--ink-700);
+        background: var(--bg);
+        line-height: 1.6;
+      }
+      img { max-width: 100%; display: block; border-radius: var(--radius-lg); }
+      a { color: var(--brand-600); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .container { width: 92%; max-width: var(--container); margin-inline: auto; }
+      .btn { display: inline-flex; align-items:center; gap:.5rem; border-radius: 999px; padding:.9rem 1.2rem; font-weight: 600; text-decoration:none; transition: transform .06s ease, box-shadow .2s ease; }
+      .btn:hover { transform: translateY(-1px); text-decoration:none; }
+      .btn-primary { background: linear-gradient(135deg, var(--brand-600), var(--brand-400)); color:#fff; box-shadow: var(--shadow-md); }
+      .btn-outline { border:1.5px solid var(--brand-300); color: var(--brand-700); background:#fff; }
+      .tag { display:inline-block; padding:.35rem .7rem; border-radius:999px; background:linear-gradient(135deg, var(--brand-200), #e0f2fe); color: var(--brand-700); font-weight:600; font-size:.85rem; }
+
+      /* Header / Nav */
+      header {
+        position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(180%) blur(8px);
+        background: rgba(255,255,255,.85); border-bottom:1px solid var(--ink-200);
+      }
+      .nav { display:flex; align-items:center; justify-content:space-between; padding:.9rem 0; }
+      .brand { display:flex; align-items:center; gap:.8rem; font-weight:800; letter-spacing:.1px; color:var(--brand-700); }
+      .brand .logo {
+        width:42px; height:42px; border-radius:12px;
+        background: conic-gradient(from 210deg at 50% 50%, var(--brand-400), var(--brand-700), var(--cyan-500));
+        box-shadow: inset 0 0 0 2px rgba(255,255,255,.7), var(--shadow-sm);
+      }
+      .nav-links { display:flex; gap:1rem; align-items:center; }
+      .nav-links a { padding:.5rem .8rem; border-radius:999px; }
+      .nav-cta { display:none; }
+      .hamburger { display:none; border:0; background:transparent; }
+      .hamburger span { display:block; width:26px; height:3px; background:var(--brand-700); margin:.32rem 0; border-radius:3px; }
+
+      /* Mobile nav */
+      @media (max-width: 900px){
+        .nav-links { display:none; }
+        .nav-cta { display:none; }
+        .hamburger { display:block; }
+        #mobileMenu { display:none; position:absolute; inset: 100% 0 auto 0; background:#fff; border-bottom:1px solid var(--ink-200); box-shadow: var(--shadow-sm); }
+        #mobileMenu a { display:block; padding:1rem 1.2rem; border-bottom:1px solid var(--ink-200); }
+      }
+
+      /* Hero */
+      .hero { position:relative; padding: 5rem 0 3rem; overflow: clip; }
+      .hero::before{
+        /* Background image with blue gradient overlay */
+        content:""; position:absolute; inset:0;
+        background:
+          linear-gradient(180deg, rgba(11,31,74,.78) 10%, rgba(11,31,74,.40) 45%, rgba(248,250,252,.0) 100%),
+          url('https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+        filter:saturate(1.05);
+      }
+      .hero .content { position:relative; color:#fff; padding-top: 1.25rem; }
+      .eyebrow { font-size:.9rem; letter-spacing:.12em; text-transform:uppercase; opacity:.92; }
+      h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height:1.1; margin:.4rem 0 1rem; color:#fff; }
+      .lead { font-size: clamp(1rem, 1.6vw, 1.2rem); color:#eef2ff; max-width: 55ch; }
+      .hero-cta { display:flex; gap:.75rem; flex-wrap:wrap; margin-top:1.1rem; }
+      .hero-stats { display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin-top:2rem; }
+      .stat { background: rgba(255,255,255,.85); color: var(--ink-700); border-radius: var(--radius-xl); padding:1rem 1.2rem; box-shadow: var(--shadow-sm); backdrop-filter: blur(6px); }
+      .stat .num { font-weight:800; font-size:1.3rem; color:var(--brand-700); }
+      .stat .lbl { font-size:.9rem; color:var(--ink-600); }
+
+      @media (max-width: 700px){
+        .hero { padding: 4.2rem 0 2rem; }
+        .hero-stats { grid-template-columns: 1fr; }
+      }
+
+      /* Services */
+      section { padding: 3.2rem 0; }
+      h2 { font-size: clamp(1.6rem, 3vw, 2.25rem); line-height:1.2; margin:0 0 .6rem; color: var(--ink-900); }
+      .sub { color: var(--ink-600); max-width:65ch; }
+      .services { display:grid; grid-template-columns: repeat(3, 1fr); gap:1.2rem; margin-top:1.6rem; }
+      .card { background:#fff; border:1px solid var(--ink-200); border-radius: var(--radius-xl); overflow:hidden; box-shadow: var(--shadow-sm); transition: transform .15s ease, box-shadow .2s ease; }
+      .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+      .card .media { aspect-ratio: 4/3; overflow:hidden; }
+      .card .body { padding:1rem 1.1rem 1.2rem; }
+      .card h3 { margin:.2rem 0 .4rem; font-size:1.15rem; color: var(--ink-900); }
+      .card p { margin:0; font-size:.98rem; color: var(--ink-600); }
+      .pill { display:inline-flex; align-items:center; gap:.4rem; font-size:.8rem; background: #eef2ff; color: var(--brand-700); padding:.35rem .6rem; border-radius:999px; font-weight:600; }
+
+      @media (max-width: 1000px){
+        .services { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 620px){
+        .services { grid-template-columns: 1fr; }
+      }
+
+      /* Before/After Slider */
+      .ba-wrap{ margin-top:1.8rem; display:grid; grid-template-columns: 1.1fr .9fr; gap:1.4rem; align-items:center; }
+      .ba-box{ position:relative; border-radius: var(--radius-xl); overflow:hidden; border:1px solid var(--ink-200); box-shadow: var(--shadow-md); }
+      .ba-box img{ width:100%; height:100%; object-fit:cover; }
+      .ba-before{ position:absolute; inset:0; }
+      .ba-after{ position:absolute; inset:0; clip-path: inset(0 0 0 50%); /* start at 50% reveal */ }
+      .ba-slider{ position:absolute; left:0; right:0; bottom:0; padding:1rem; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 100%); }
+      .ba-slider input[type=range]{ width:100%; accent-color: var(--brand-500); }
+      .ba-handle{ position:absolute; top:0; bottom:0; left:50%; width:3px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+      .ba-labels{ position:absolute; inset: 12px auto auto 12px; display:flex; gap:.5rem; }
+
+      @media (max-width: 900px){
+        .ba-wrap{ grid-template-columns: 1fr; }
+      }
+
+      /* Filterable Gallery */
+      .filters { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:1rem; }
+      .filter-btn { border:1px solid var(--ink-300); background:#fff; border-radius:999px; padding:.5rem .9rem; cursor:pointer; font-weight:600; }
+      .filter-btn[aria-pressed="true"]{ background: linear-gradient(135deg, var(--brand-600), var(--brand-400)); color:#fff; border-color:transparent; }
+      .gallery { margin-top:1rem; display:grid; grid-template-columns: repeat(4, 1fr); gap: .9rem; }
+      .gallery figure { margin:0; background:#fff; padding:.5rem; border:1px solid var(--ink-200); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+      .gallery figcaption { font-size:.92rem; color: var(--ink-600); margin-top:.5rem; }
+
+      @media (max-width: 1100px){ .gallery{ grid-template-columns: repeat(3, 1fr);} }
+      @media (max-width: 800px){ .gallery{ grid-template-columns: repeat(2, 1fr);} }
+      @media (max-width: 520px){ .gallery{ grid-template-columns: 1fr;} }
+
+      /* Testimonials */
+      .testimonials{ display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin-top:1.2rem; }
+      .quote{ background:#fff; border:1px solid var(--ink-200); border-radius: var(--radius-xl); padding:1.1rem; box-shadow: var(--shadow-sm); }
+      .quote p{ margin:.2rem 0 .8rem; }
+      .avatar{ display:flex; align-items:center; gap:.6rem; }
+      .avatar img{ width:44px; height:44px; border-radius:50%; object-fit:cover; }
+      .avatar .name{ font-weight:700; color: var(--ink-900); }
+      .avatar .role{ font-size:.9rem; color: var(--ink-600); }
+      @media (max-width: 900px){ .testimonials{ grid-template-columns: 1fr; } }
+
+      /* Pricing / Engagement */
+      .pricing{ display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin-top:1.2rem; }
+      .plan{ background:#fff; border:1px solid var(--ink-200); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); overflow:hidden; }
+      .plan .hdr{ padding:1rem 1.1rem; background:linear-gradient(135deg, var(--brand-600), var(--brand-400)); color:#fff; }
+      .plan .bd{ padding:1.1rem; }
+      .plan ul{ margin:.4rem 0 0; padding-left:1.1rem; }
+      .plan li{ margin:.42rem 0; }
+      @media (max-width: 1000px){ .pricing{ grid-template-columns: 1fr; } }
+
+      /* Contact CTA */
+      .cta{ position:relative; overflow:clip; }
+      .cta .box{ position:relative; border-radius: var(--radius-xl); padding:1.4rem; background: linear-gradient(135deg, rgba(37,99,235,.12), rgba(14,165,233,.12)); border:1px solid var(--brand-200); box-shadow: var(--shadow-md); }
+      .cta .box::after{ content:""; position:absolute; right:-40px; top:-40px; width:160px; height:160px; border-radius:50%; background: radial-gradient(circle at 30% 30%, rgba(59,130,246,.25), rgba(59,130,246,0)); }
+
+      footer { padding: 2rem 0 2.6rem; color: var(--ink-600); }
+      .footer-grid{ display:grid; grid-template-columns: 1fr auto; gap:1rem; align-items:center; }
+      @media (max-width: 800px){ .footer-grid{ grid-template-columns: 1fr; text-align:center; } }
+      .socials a{ display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; background:#fff; border:1px solid var(--ink-200); box-shadow: var(--shadow-sm); margin-right:.4rem; }
+
+      /* Focus visible for keyboard users */
+      :focus-visible { outline: 3px solid var(--cyan-500); outline-offset: 2px; border-radius: 6px; }
+    </style>
+  </head>
+  <body>
+    <!-- ===== Header & Navigation ===== -->
+    <header>
+      <div class="container nav" role="navigation" aria-label="Main">
+        <!-- TODO: Replace brand text with your logo or an <img> -->
+        <a class="brand" href="#top" aria-label="Go to top">
+          <div class="logo" aria-hidden="true"></div>
+          <span>Altitude House Consulting</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#services">Services</a>
+          <a href="#projects">Projects</a>
+          <a href="#testimonials">Testimonials</a>
+          <a href="#pricing">Engagement</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <div class="nav-cta">
+          <!-- TODO: Replace phone/email -->
+          <a class="btn btn-outline" href="mailto:AltitudeHouseConsultingLLC@gmail.com">Email Us</a>
+          <a class="btn btn-primary" href="tel:+14075550182">Call 407‑555‑0182</a>
+        </div>
+        <button class="hamburger" id="hamburger" aria-controls="mobileMenu" aria-expanded="false" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <!-- Mobile menu -->
+      <div id="mobileMenu" class="container" role="menu" aria-label="Mobile">
+        <a href="#services" role="menuitem">Services</a>
+        <a href="#projects" role="menuitem">Projects</a>
+        <a href="#testimonials" role="menuitem">Testimonials</a>
+        <a href="#pricing" role="menuitem">Engagement</a>
+        <a href="#contact" role="menuitem">Contact</a>
+        <div style="padding: .8rem 1.2rem; display:flex; gap:.6rem;">
+          <a class="btn btn-outline" href="mailto:AltitudeHouseConsultingLLC@gmail.com">Email Us</a>
+          <a class="btn btn-primary" href="tel:+14075550182">Call Now</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== Hero ===== -->
+    <section class="hero" id="top" aria-label="Hero">
+      <div class="container content">
+        <span class="eyebrow">Property Management • Home Repair • Renovation Oversight</span>
+        <h1>Image‑forward, detail‑driven consulting that protects your property and your budget.</h1>
+        <p class="lead">From tenant‑ready turns to emergency fixes, we coordinate vetted pros, manage timelines, and keep you informed with photo‑rich updates at every step.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#contact">Get a Quote</a>
+          <a class="btn btn-outline" href="#projects">See Recent Projects</a>
+        </div>
+        <div class="hero-stats" role="list" aria-label="Key stats">
+          <div class="stat" role="listitem"><div class="num"><strong>72 hrs</strong></div><div class="lbl">Avg. non‑urgent repair turnaround</div></div>
+          <div class="stat" role="listitem"><div class="num"><strong>50+</strong></div><div class="lbl">Vetted contractors in network</div></div>
+          <div class="stat" role="listitem"><div class="num"><strong>98%</strong></div><div class="lbl">On‑time project delivery</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Services ===== -->
+    <section id="services" aria-labelledby="services-h">
+      <div class="container">
+        <span class="tag">What we do</span>
+        <h2 id="services-h">Property care, maintenance, and repair — done right.</h2>
+        <p class="sub">Full‑spectrum support for landlords, investors, and homeowners. We document thoroughly, coordinate clear scopes, and share photos so you can see progress without being on‑site.</p>
+
+        <!-- Service cards: replace images and text as needed -->
+        <div class="services" role="list">
+          <!-- Service 1 -->
+          <article class="card" role="listitem">
+            <div class="media">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1505692794403-34d4982f88aa?q=80&w=1200&auto=format&fit=crop" alt="Clean, staged rental living room ready for tenants" />
+            </div>
+            <div class="body">
+              <span class="pill">Property Management</span>
+              <h3>Tenant‑Ready Turns</h3>
+              <p>Make‑ready walkthroughs, punchlists, paint, clean, minor repairs — with before/after photos and itemized costs.</p>
+            </div>
+          </article>
+
+          <!-- Service 2 -->
+          <article class="card" role="listitem">
+            <div class="media">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=1200&auto=format&fit=crop" alt="Technician repairing a kitchen sink faucet" />
+            </div>
+            <div class="body">
+              <span class="pill">Home Repair</span>
+              <h3>Maintenance Coordination</h3>
+              <p>Responsive dispatch for plumbing, electrical, HVAC, and appliance issues — scheduled, tracked, and verified.</p>
+            </div>
+          </article>
+
+          <!-- Service 3 -->
+          <article class="card" role="listitem">
+            <div class="media">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop" alt="Contractor installing drywall on a renovation project" />
+            </div>
+            <div class="body">
+              <span class="pill">Project Oversight</span>
+              <h3>Renovations & Refreshes</h3>
+              <p>Scope, bids, schedules, and site checks. We keep crews on task and provide visual updates you can trust.</p>
+            </div>
+          </article>
+
+          <!-- Service 4 -->
+          <article class="card" role="listitem">
+            <div class="media">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1451976426598-a7593bd6d0b2?q=80&w=1200&auto=format&fit=crop" alt="Landscaping crew trimming hedges and mowing a lawn" />
+            </div>
+            <div class="body">
+              <span class="pill">Curb Appeal</span>
+              <h3>Exterior & Grounds</h3>
+              <p>Landscaping, pressure wash, fence & deck, exterior paint — recurring or one‑time to boost value and rentability.</p>
+            </div>
+          </article>
+
+          <!-- Service 5 -->
+          <article class="card" role="listitem">
+            <div class="media">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1581093588401-a97c4b585fa7?q=80&w=1200&auto=format&fit=crop" alt="Electrician inspecting breaker panel with thermal camera" />
+            </div>
+            <div class="body">
+              <span class="pill">Risk & Safety</span>
+              <h3>Inspections & Compliance</h3>
+              <p>Annual checklists, smoke/CO detectors, GFCI checks, and documentation for insurance or audit needs.</p>
+            </div>
+          </article>
+
+          <!-- Service 6 -->
+          <article class="card" role="listitem">
+            <div class="media">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1493410227592-6f0b7b7e3f36?q=80&w=1200&auto=format&fit=crop" alt="Emergency repair crew fixing a roof at sunset" />
+            </div>
+            <div class="body">
+              <span class="pill">Rapid Response</span>
+              <h3>Emergency Repairs</h3>
+              <p>After‑hours coordination for leaks, power, or security issues — clear comms and decisive action.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Featured Before/After ===== -->
+    <section id="projects" aria-labelledby="projects-h">
+      <div class="container">
+        <span class="tag">Featured project</span>
+        <h2 id="projects-h">Bathroom refresh — <em>2 days, under budget</em>.</h2>
+        <p class="sub">We document transformations with side‑by‑side visuals so you can approve decisions with confidence. Slide to compare.</p>
+
+        <!-- Before/After slider: swap the two image URLs with your own before/after shots -->
+        <div class="ba-wrap">
+          <div class="ba-box" aria-label="Before and after comparison">
+            <img class="ba-before" src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1600&auto=format&fit=crop" alt="Before: dated bathroom with old tiles" />
+            <img class="ba-after"  src="https://images.unsplash.com/photo-1584624271387-cf12c1465f7a?q=80&w=1600&auto=format&fit=crop" alt="After: updated bathroom with modern finishes" />
+            <div class="ba-handle" aria-hidden="true"></div>
+            <div class="ba-labels">
+              <span class="pill" aria-hidden="true">Before</span>
+              <span class="pill" aria-hidden="true">After</span>
+            </div>
+            <div class="ba-slider" aria-hidden="true">
+              <input id="baRange" type="range" min="0" max="100" value="50" aria-label="Reveal after image" />
+            </div>
+          </div>
+          <div>
+            <h3>Scope & Results</h3>
+            <p>Replaced vanity, fixtures, mirror, and lighting; regrouted shower; patched and painted. Completed in 16 labor hours with parts on hand. Tenant turn achieved in <strong>48 hours</strong>.</p>
+            <ul>
+              <li>Materials: $520 • Labor: $950 • Total: <strong>$1,470</strong></li>
+              <li>Rent lift on re‑list: <strong>+$125/mo</strong></li>
+              <li>Photo log and receipts delivered with close‑out</li>
+            </ul>
+            <a class="btn btn-outline" href="#gallery">Browse More Photos</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Gallery with Filters ===== -->
+    <section aria-labelledby="gallery-h" id="gallery">
+      <div class="container">
+        <span class="tag">Photo gallery</span>
+        <h2 id="gallery-h">Recent work — interiors, exteriors, and repairs.</h2>
+        <p class="sub">Filter by category to jump to what matters most. Every engagement includes photo documentation so you can track progress from anywhere.</p>
+
+        <!-- Filter buttons -->
+        <div class="filters" role="toolbar" aria-label="Gallery filters">
+          <button class="filter-btn" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter-btn" data-filter="interior">Interiors</button>
+          <button class="filter-btn" data-filter="exterior">Exteriors</button>
+          <button class="filter-btn" data-filter="landscaping">Landscaping</button>
+          <button class="filter-btn" data-filter="repair">Repairs</button>
+        </div>
+
+        <!-- Gallery grid (swap images & captions) -->
+        <div class="gallery" id="galleryGrid">
+          <!-- Item -->
+          <figure data-cat="interior">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=1200&auto=format&fit=crop" alt="Freshly painted living room with natural light" />
+            <figcaption>Interior paint & patch — living room refresh</figcaption>
+          </figure>
+          <figure data-cat="repair">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1523419409543-a9d282d0d4d9?q=80&w=1200&auto=format&fit=crop" alt="Technician repairing sink P‑trap under a cabinet" />
+            <figcaption>Leak repair — P‑trap and disposal swap</figcaption>
+          </figure>
+          <figure data-cat="exterior">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?q=80&w=1200&auto=format&fit=crop" alt="Pressure‑washed home exterior looking clean" />
+            <figcaption>Pressure wash — siding & walkways</figcaption>
+          </figure>
+          <figure data-cat="landscaping">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1520256862855-398228c41684?q=80&w=1200&auto=format&fit=crop" alt="Landscaped backyard with trimmed shrubs and fresh mulch" />
+            <figcaption>Landscape tidy — trim, edge, mulch</figcaption>
+          </figure>
+          <figure data-cat="repair">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1200&auto=format&fit=crop" alt="Electrician replacing a light fixture" />
+            <figcaption>Lighting — fixture upgrades</figcaption>
+          </figure>
+          <figure data-cat="exterior">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=1200&auto=format&fit=crop" alt="Newly painted front door and porch" />
+            <figcaption>Exterior paint — door & trim</figcaption>
+          </figure>
+          <figure data-cat="interior">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1501045661006-fcebe0257c3f?q=80&w=1200&auto=format&fit=crop" alt="Kitchen with updated hardware on cabinets" />
+            <figcaption>Kitchen refresh — pulls & caulk</figcaption>
+          </figure>
+          <figure data-cat="landscaping">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1460317442991-0ec209397118?q=80&w=1200&auto=format&fit=crop" alt="Mowed lawn and trimmed hedges in the front yard" />
+            <figcaption>Lawn care — mow & trim</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Testimonials ===== -->
+    <section id="testimonials" aria-labelledby="testimonials-h">
+      <div class="container">
+        <span class="tag">Client feedback</span>
+        <h2 id="testimonials-h">Trusted by owners and investors.</h2>
+        <div class="testimonials" role="list">
+          <figure class="quote" role="listitem">
+            <p>“I manage remotely and need eyes on the ground. Photo logs and clear updates made turns fast and painless.”</p>
+            <figcaption class="avatar">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&auto=format&fit=crop" alt="Portrait of client" />
+              <div>
+                <div class="name">Taylor R.</div>
+                <div class="role">Single‑family owner</div>
+              </div>
+            </figcaption>
+          </figure>
+          <figure class="quote" role="listitem">
+            <p>“They coordinated multiple trades for a kitchen update and kept it under budget — rented in a week.”</p>
+            <figcaption class="avatar">
+              <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=256&auto=format&fit=crop" alt="Portrait of client" />
+              <div>
+                <div class="name">Jordan M.</div>
+                <div class="role">Small‑plex investor</div>
+              </div>
+            </figcaption>
+          </figure>
+          <figure class="quote" role="listitem">
+            <p>“Emergency response was quick and thorough. Tenants felt taken care of and so did we.”</p>
+            <figcaption class="avatar">
+              <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=256&auto=format&fit=crop" alt="Portrait of client" />
+              <div>
+                <div class="name">Casey W.</div>
+                <div class="role">Townhome HOA board</div>
+              </div>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Pricing / Engagement Models ===== -->
+    <section id="pricing" aria-labelledby="pricing-h">
+      <div class="container">
+        <span class="tag">How we work</span>
+        <h2 id="pricing-h">Flexible engagement to fit your needs.</h2>
+        <div class="pricing" role="list">
+          <!-- Plan 1 -->
+          <article class="plan" role="listitem" aria-labelledby="plan1-h">
+            <div class="hdr"><h3 id="plan1-h">On‑Call Support</h3><p>Pay‑as‑you‑go repairs</p></div>
+            <div class="bd">
+              <ul>
+                <li>Dispatch vetted pros as needed</li>
+                <li>Photo documentation included</li>
+                <li>Transparent labor & materials billing</li>
+              </ul>
+              <p><em>Best for single repairs and urgent needs.</em></p>
+            </div>
+          </article>
+          <!-- Plan 2 -->
+          <article class="plan" role="listitem" aria-labelledby="plan2-h">
+            <div class="hdr"><h3 id="plan2-h">Managed Maintenance</h3><p>Monthly coordination</p></div>
+            <div class="bd">
+              <ul>
+                <li>Preventive schedules & seasonal checks</li>
+                <li>Preferred response times</li>
+                <li>Consolidated monthly reporting</li>
+              </ul>
+              <p><em>Best for owners with multiple units.</em></p>
+            </div>
+          </article>
+          <!-- Plan 3 -->
+          <article class="plan" role="listitem" aria-labelledby="plan3-h">
+            <div class="hdr"><h3 id="plan3-h">Project Oversight</h3><p>Renovations & turns</p></div>
+            <div class="bd">
+              <ul>
+                <li>Scope, bids, schedules, site checks</li>
+                <li>Budget tracking & change control</li>
+                <li>Close‑out docs with photo log</li>
+              </ul>
+              <p><em>Best for value‑add upgrades.</em></p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Contact CTA ===== -->
+    <section id="contact" class="cta" aria-labelledby="contact-h">
+      <div class="container">
+        <div class="box">
+          <h2 id="contact-h">Let’s discuss your property needs.</h2>
+          <p class="sub">Share a few details and we’ll follow up with options and a photo‑first plan of action.</p>
+          <div class="hero-cta" style="margin-top:.6rem;">
+            <!-- TODO: Replace with your live contact methods -->
+            <a class="btn btn-primary" href="mailto:AltitudeHouseConsultingLLC@gmail.com?subject=Property%20&%20Repair%20Consulting%20Inquiry">Email: AltitudeHouseConsultingLLC@gmail.com</a>
+            <a class="btn btn-outline" href="tel:+14075550182">Call/Text: 407‑555‑0182</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer role="contentinfo">
+      <div class="container footer-grid">
+        <div>
+          <div class="brand" style="gap:.6rem;">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+              <strong>Altitude House Consulting</strong><br />
+              <small>Property Management & Home Repair Consulting</small>
+            </div>
+          </div>
+          <p style="margin:.6rem 0 0;">
+            <!-- TODO: Replace service area -->
+            <small>Serving: Central Florida & surrounding areas • © <span id="year"></span></small>
+          </p>
+        </div>
+        <div class="socials" aria-label="Social links">
+          <!-- Replace with your profiles -->
+          <a href="#" aria-label="Facebook">🔗</a>
+          <a href="#" aria-label="Instagram">🔗</a>
+          <a href="#" aria-label="LinkedIn">🔗</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ===== Minimal JS (no framework) ===== -->
+    <script>
+      // --- Mobile menu toggle ---
+      const hamburger = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobileMenu');
+      hamburger?.addEventListener('click', () => {
+        const open = mobileMenu.style.display === 'block';
+        mobileMenu.style.display = open ? 'none' : 'block';
+        hamburger.setAttribute('aria-expanded', String(!open));
+      });
+
+      // Close mobile menu on nav click (nice UX)
+      mobileMenu?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        mobileMenu.style.display = 'none';
+        hamburger.setAttribute('aria-expanded', 'false');
+      }));
+
+      // --- Before/After slider logic ---
+      const baRange = document.getElementById('baRange');
+      const afterImg = document.querySelector('.ba-after');
+      const handle = document.querySelector('.ba-handle');
+      function updateBA(){
+        const v = Number(baRange.value); // 0..100
+        // Clip the AFTER image to reveal [0..100]% width
+        afterImg.style.clipPath = `inset(0 0 0 ${100 - v}%)`;
+        handle.style.left = `${v}%`;
+      }
+      baRange?.addEventListener('input', updateBA);
+      updateBA();
+
+      // --- Filterable gallery ---
+      const buttons = document.querySelectorAll('.filter-btn');
+      const items = document.querySelectorAll('#galleryGrid figure');
+      buttons.forEach(btn => btn.addEventListener('click', () => {
+        const f = btn.dataset.filter;
+        buttons.forEach(b => b.setAttribute('aria-pressed', 'false'));
+        btn.setAttribute('aria-pressed', 'true');
+        items.forEach(el => {
+          if (f === 'all' || el.dataset.cat === f) {
+            el.style.display = '';
+          } else {
+            el.style.display = 'none';
+          }
+        });
+      }));
+
+      // --- Dynamic year in footer ---
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
